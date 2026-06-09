@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>業務夥伴需求調查 ｜ 業發組</title>
+<style>
+  :root{
+    --primary:#1B2A4A;
+    --primary-light:#2E4A7A;
+    --accent:#C9A84C;
+    --accent-deep:#A07830;
+    --bg:#FAF6EE;
+    --text:#333333;
+    --border:#E8E0D0;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Noto Sans TC","微軟正黑體","Microsoft JhengHei",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    padding-bottom:40px;
+  }
+  .header{
+    background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+    color:#fff;
+    padding:34px 20px 30px;
+    text-align:center;
+    border-bottom:3px solid var(--accent);
+  }
+  .brand{
+    font-size:14px;
+    letter-spacing:4px;
+    color:var(--accent);
+    margin-bottom:14px;
+  }
+  .header h1{
+    font-size:26px;
+    font-weight:700;
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .header p{
+    font-size:14px;
+    opacity:.9;
+    max-width:600px;
+    margin:0 auto;
+    text-align:left;
+  }
+  .container{
+    max-width:680px;
+    margin:26px auto 0;
+    padding:0 16px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:24px 22px;
+    margin-bottom:18px;
+    box-shadow:0 2px 10px rgba(27,42,74,.05);
+  }
+  .q-label{
+    font-size:16px;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:4px;
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+  }
+  .q-num{
+    background:var(--accent);
+    color:#fff;
+    font-size:13px;
+    min-width:24px;height:24px;
+    border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:2px;
+  }
+  .q-hint{
+    font-size:12.5px;color:#888;margin:2px 0 14px 32px;
+  }
+  .required{color:#b5483b;font-size:13px;margin-left:4px;}
+  .options{display:flex;flex-direction:column;gap:10px;margin-left:32px;}
+  .opt{
+    display:flex;align-items:center;gap:11px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:11px 14px;
+    cursor:pointer;
+    transition:all .15s;
+    font-size:15px;
+  }
+  .opt:hover{border-color:var(--accent);background:#FFFDF6;}
+  .opt.checked{border-color:var(--accent);background:#FFF3CC;}
+  .opt input{accent-color:var(--accent);width:17px;height:17px;flex-shrink:0;cursor:pointer;}
+  .rank-opt{justify-content:space-between;}
+  .rank-input{width:60px !important;text-align:center;flex-shrink:0;padding:7px 4px !important;font-weight:700;color:var(--primary);}
+  input[type=text],textarea,select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:11px 13px;
+    font-size:15px;
+    font-family:inherit;
+    color:var(--text);
+    margin-left:0;
+    background:#fff;
+  }
+  .field-wrap{margin-left:32px;}
+  input[type=text]:focus,textarea:focus,select:focus{
+    outline:none;border-color:var(--accent);
+  }
+  textarea{min-height:90px;resize:vertical;}
+  .scale{display:flex;gap:8px;margin-left:32px;flex-wrap:wrap;}
+  .scale label{
+    flex:1;min-width:54px;text-align:center;
+    border:1px solid var(--border);border-radius:9px;
+    padding:10px 4px;cursor:pointer;font-size:14px;transition:all .15s;
+  }
+  .scale label:hover{border-color:var(--accent);}
+  .scale input{display:none;}
+  .scale input:checked + span{font-weight:700;}
+  .scale label.checked{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .scale small{display:block;font-size:11px;color:#999;margin-top:2px;}
+  .scale label.checked small{color:#dcd2b5;}
+  .submit-btn{
+    width:100%;
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:16px;
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:1px;
+    cursor:pointer;
+    margin-top:6px;
+    transition:background .2s;
+    font-family:inherit;
+  }
+  .submit-btn:hover{background:var(--primary-light);}
+  .footer{
+    text-align:center;font-size:12.5px;color:#999;margin-top:22px;
+  }
+  .footer .gold{color:var(--accent-deep);font-weight:600;}
+  .thanks{
+    display:none;text-align:center;padding:50px 20px;
+  }
+  .thanks .check{
+    width:72px;height:72px;border-radius:50%;
+    background:var(--accent);color:#fff;font-size:40px;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+  }
+  .thanks h2{color:var(--primary);font-size:23px;margin-bottom:12px;}
+  .thanks p{color:#666;font-size:15px;}
+  .err{border-color:#b5483b !important;}
+  .err-msg{color:#b5483b;font-size:13px;margin:8px 0 0 32px;display:none;}
+
+  /* 管理者區 */
+  .admin-toggle{
+    text-align:center;margin-top:30px;
+  }
+  .admin-toggle button{
+    background:none;border:none;color:#bbb;font-size:12px;
+    cursor:pointer;text-decoration:underline;font-family:inherit;
+  }
+  .admin-panel{
+    display:none;max-width:680px;margin:10px auto 0;padding:0 16px;
+  }
+  .admin-panel .card h3{color:var(--primary);margin-bottom:10px;font-size:17px;}
+  .admin-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .admin-btns button{
+    background:var(--accent);color:#fff;border:none;border-radius:8px;
+    padding:10px 16px;font-size:14px;cursor:pointer;font-family:inherit;font-weight:600;
+  }
+  .admin-btns button.gray{background:#888;}
+  .admin-btns button.danger{background:#b5483b;}
+  .stat-row{font-size:14px;padding:6px 0;border-bottom:1px dashed var(--border);}
+  .stat-bar-wrap{background:var(--border);border-radius:5px;height:18px;overflow:hidden;margin-top:3px;}
+  .stat-bar{background:var(--accent);height:100%;border-radius:5px;}
+  #respList{font-size:13px;max-height:300px;overflow:auto;margin-top:10px;}
+  #respList .item{border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;}
+  #respList .item b{color:var(--primary);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">蘇振毅｜業發組</div>
+  <h1>業務夥伴需求調查</h1>
+  <p>各位夥伴好：<br>很高興在下半年接任業發組組長。為了精準協助大家突破業務瓶頸、順利達成年度目標，想請夥伴花 2 分鐘，與我分享目前您最渴望獲得的協助或資源。<br>您的每條回饋，都將直接決定我後續支持的精準度，以及業發組未來的政策走向與資源配置。期待聽到您的真實心聲，讓我們攜手並進，共同打造最強後盾，完成屬於我們的目標！</p>
+</div>
+
+<form id="surveyForm" class="container" name="business-needs-survey">
+
+  <!-- Q1 -->
+  <div class="card">
+    <div class="q-label"><span class="q-num">1</span><span>請排出你最希望得到協助的優先順序<span class="required">＊</span></span></div>
+    <div class="q-hint">在每個項目右側填入順位（1＝最優先），可只排你在意的幾項</div>
+    <div class="options" id="q1">
+      <label class="opt rank-opt"><span>客戶開發與活動量</span><input type="number" min="1" max="7" name="rank_客戶開發與活動量" class="rank-input" placeholder="—"></label>
+      <label class="opt rank-opt"><span>數位／AI 工具協助</span><input type="number" min="1" max="7" name="rank_數位／AI工具協助" class="rank-input" placeholder="—"></label>
+      <label class="opt rank-opt"><span>話術與異議處理</span><input type="number" min="1" max="7" name="rank_話術與異議處理" class="rank-input" placeholder="—"></label>
+      <label class="opt rank-opt"><span>商品知識與提案製作</span><input type="number" min="1" max="7" name="rank_商品知識與提案製作" class="rank-input" placeholder="—"></label>
+      <label class="opt rank-opt"><span>業績目標達成</span><input type="number" min="1" max="7" name="rank_業績目標達成" class="rank-input" placeholder="—"></label>
+      <label class="opt rank-opt"><span>定期業績進度檢視與盲點調整</span><input type="number" min="1" max="7" name="rank_定期業績進度檢視與盲點調整" class="rank-input" placeholder="—"></label>
+      <label class="opt rank-opt"><span>個人人生目標</span><input type="number" min="1" max="7" name="rank_個人人生目標" class="rank-input" placeholder="—"></label>
+    </div>
+    <div class="err-msg" id="err-q1">請至少為一個項目填入順位</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card">
+    <div class="q-label"><span class="q-num">2</span><span>2026 年 7–12 月，你的個人業績目標為多少 FYC？</span></div>
+    <div class="q-hint">請填寫這半年（7～12 月）期望達成的 FYC 金額</div>
+    <div class="field-wrap">
+      <input type="text" name="fyc" placeholder="例如：60 萬">
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card">
+    <div class="q-label"><span class="q-num">3</span><span>你偏好哪一種帶領方式？</span></div>
+    <div class="q-hint">1＝偏好「只給目標、個人自行發揮」　5＝偏好「專注協助建立工作習慣、優化拜訪流程（專注因果），不過度緊盯最終業績」</div>
+    <div class="scale" id="scale3">
+      <label><input type="radio" name="acceptance" value="1"><span>1</span><small>給目標自行發揮</small></label>
+      <label><input type="radio" name="acceptance" value="2"><span>2</span><small></small></label>
+      <label><input type="radio" name="acceptance" value="3"><span>3</span><small>兩者皆可</small></label>
+      <label><input type="radio" name="acceptance" value="4"><span>4</span><small></small></label>
+      <label><input type="radio" name="acceptance" value="5"><span>5</span><small>專注因果帶領</small></label>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="card">
+    <div class="q-label"><span class="q-num">4</span><span>如果引進數位／AI 工具，你最想要哪一種？</span></div>
+    <div class="field-wrap">
+      <select name="aitool">
+        <option value="">— 請選擇 —</option>
+        <option>客戶資料管理／提醒系統</option>
+        <option>保單健診／提案自動產生</option>
+        <option>商品比較與試算工具</option>
+        <option>話術腳本／AI 對話練習</option>
+        <option>社群與行銷素材製作</option>
+        <option>其他（請填於下方建議欄）</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="card">
+    <div class="q-label"><span class="q-num">5</span><span>有沒有其他想說的話、困難或建議？</span></div>
+    <div class="field-wrap">
+      <textarea name="comment" placeholder="任何想法都歡迎，匿名以外的真心話也可以寫在這裡"></textarea>
+    </div>
+  </div>
+
+  <!-- 個人資料 -->
+  <div class="card">
+    <div class="q-label"><span class="q-num">6</span><span>你的姓名<span class="required">＊</span></span></div>
+    <div class="q-hint">方便我針對你的需求個別跟進、提供協助</div>
+    <div class="field-wrap">
+      <input type="text" name="name" placeholder="請填寫姓名">
+    </div>
+    <div class="err-msg" id="err-name">請填寫姓名</div>
+    <div class="q-label" style="margin-top:20px;"><span class="q-num">7</span><span>希望業發組能提供你哪些協助？</span></div>
+    <div class="q-hint">具體說明你期待業發組支援你的地方，越具體越好</div>
+    <div class="field-wrap">
+      <textarea name="bizdev_help" placeholder="例如：協助規劃客戶開發節奏、提供 AI 工具教學、陪同拜訪重點客戶…"></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn">送出問卷</button>
+
+  <div class="footer">
+    本問卷由 <span class="gold">蘇振毅／業發組</span> 製作 · 資料僅供通訊處內部政策規劃與資源配置使用
+  </div>
+</form>
+
+<!-- 感謝頁 -->
+<div class="thanks container" id="thanks">
+  <div class="check">✓</div>
+  <h2>表單已順利送出！</h2>
+  <p>非常感謝您的真誠回饋。<br>讓我們下半年互相協助，一起把目標一個個拿下來！</p>
+  <button id="dlBtn" class="submit-btn" style="max-width:340px;margin:26px auto 0;display:block;" onclick="exportCSV()">下載我的回覆並回傳給組長</button>
+  <p id="dlHint" style="font-size:13px;color:#888;margin-top:12px;">請點上方按鈕下載檔案，再透過 LINE 傳給蘇振毅組長，謝謝！</p>
+  <div class="footer" style="margin-top:26px;">蘇振毅｜業發組</div>
+</div>
+
+<!-- 管理者入口 -->
+<div class="admin-toggle">
+  <button onclick="toggleAdmin()">管理者檢視</button>
+</div>
+
+<div class="admin-panel" id="adminPanel">
+  <div class="card">
+    <h3>📊 回覆統計</h3>
+    <div class="admin-btns">
+      <button onclick="renderStats()">重新整理</button>
+      <button class="gray" onclick="exportCSV()">匯出 CSV</button>
+      <button class="danger" onclick="clearAll()">清空資料</button>
+    </div>
+    <div id="statTotal" style="font-weight:700;color:var(--primary);margin-bottom:12px;"></div>
+    <div id="statNeeds"></div>
+    <h3 style="margin-top:20px;">📝 每筆回覆</h3>
+    <div id="respList"></div>
+  </div>
+</div>
+
+<script>
+// ===== 設定區：請把下面網址換成你的 Google Apps Script 網址 =====
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbw7c1DqP6iTyQSf75kJirDZHbqikHWl3cwkoA7WmQM1x0im3D2yb0ODYmixF-abllwEWg/exec';
+// ============================================================
+
+const DB_NAME='ChengYiSurvey', STORE='responses';
+let db;
+
+function openDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(DB_NAME,1);
+    r.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains(STORE))
+        d.createObjectStore(STORE,{keyPath:'id',autoIncrement:true});
+    };
+    r.onsuccess=e=>{db=e.target.result;res(db);};
+    r.onerror=e=>rej(e);
+  });
+}
+function saveResp(obj){
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(STORE,'readwrite');
+    tx.objectStore(STORE).add(obj);
+    tx.oncomplete=()=>res();
+    tx.onerror=e=>rej(e);
+  });
+}
+function getAll(){
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(STORE,'readonly');
+    const req=tx.objectStore(STORE).getAll();
+    req.onsuccess=()=>res(req.result);
+    req.onerror=e=>rej(e);
+  });
+}
+function clearStore(){
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(STORE,'readwrite');
+    tx.objectStore(STORE).clear();
+    tx.oncomplete=()=>res();
+    tx.onerror=e=>rej(e);
+  });
+}
+
+// 選項點擊高亮
+document.querySelectorAll('.opt').forEach(o=>{
+  const input=o.querySelector('input');
+  const sync=()=>{
+    if(input.type==='checkbox'){o.classList.toggle('checked',input.checked);}
+    else if(input.classList.contains('rank-input')){o.classList.toggle('checked',!!input.value);}
+  };
+  input.addEventListener('change',sync);
+  input.addEventListener('input',sync);
+});
+document.querySelectorAll('#scale3 label').forEach(l=>{
+  l.querySelector('input').addEventListener('change',()=>{
+    document.querySelectorAll('#scale3 label').forEach(x=>x.classList.remove('checked'));
+    l.classList.add('checked');
+  });
+});
+
+const form=document.getElementById('surveyForm');
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  let ok=true;
+  const rankFields=['客戶開發與活動量','數位／AI工具協助','話術與異議處理','商品知識與提案製作','業績目標達成','定期業績進度檢視與盲點調整','個人人生目標'];
+  const ranks={};
+  rankFields.forEach(f=>{
+    const v=form['rank_'+f].value;
+    if(v) ranks[f]=parseInt(v);
+  });
+  const name=form.name.value.trim();
+
+  document.getElementById('err-q1').style.display = Object.keys(ranks).length?'none':'block';
+  document.getElementById('err-name').style.display = name?'none':'block';
+  form.name.classList.toggle('err',!name);
+  if(!Object.keys(ranks).length||!name){ok=false;}
+  if(!ok){window.scrollTo({top:0,behavior:'smooth'});return;}
+
+  const data={
+    name,
+    ranks,
+    fyc:form.fyc.value.trim(),
+    acceptance:(form.querySelector('input[name=acceptance]:checked')||{}).value||'',
+    aitool:form.aitool.value,
+    comment:form.comment.value.trim(),
+    bizdev_help:form.bizdev_help.value.trim(),
+    time:new Date().toLocaleString('zh-TW')
+  };
+
+  // 1) 自動送到 Google 試算表（夥伴免下載）
+  let sentOK=false;
+  if(GAS_URL && GAS_URL.indexOf('http')===0){
+    try{
+      const fd=new FormData();
+      fd.append('姓名',name);
+      fd.append('FYC目標_7至12月',data.fyc);
+      fd.append('帶領方式偏好',data.acceptance);
+      fd.append('想要的AI工具',data.aitool);
+      fd.append('其他建議',data.comment);
+      fd.append('希望業發組協助',data.bizdev_help);
+      fd.append('填寫時間',data.time);
+      rankFields.forEach(f=>fd.append('順位_'+f, ranks[f]||''));
+      await fetch(GAS_URL,{method:'POST',body:fd});
+      sentOK=true;
+    }catch(err){console.warn('送至試算表失敗：',err);}
+  }
+
+  // 2) 本機備份（保險，離線也存得住）
+  try{await saveResp(data);}catch(err){console.warn('本機備份失敗：',err);}
+
+  form.style.display='none';
+  document.querySelector('.admin-toggle').style.display='none';
+  document.getElementById('thanks').style.display='block';
+  // 自動送出成功就不需要請夥伴手動下載
+  const dlBtn=document.getElementById('dlBtn');
+  const dlHint=document.getElementById('dlHint');
+  if(sentOK && dlBtn){dlBtn.style.display='none'; if(dlHint) dlHint.style.display='none';}
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// 管理者
+function toggleAdmin(){
+  const p=document.getElementById('adminPanel');
+  const show=p.style.display!=='block';
+  p.style.display=show?'block':'none';
+  if(show){renderStats();p.scrollIntoView({behavior:'smooth'});}
+}
+async function renderStats(){
+  const all=await getAll();
+  document.getElementById('statTotal').textContent='總回覆數：'+all.length+' 筆';
+  // 需求優先順位統計（平均順位越小＝越優先）
+  const opts=['客戶開發與活動量','數位／AI工具協助','話術與異議處理','商品知識與提案製作','業績目標達成','定期業績進度檢視與盲點調整','個人人生目標'];
+  const agg={};opts.forEach(o=>agg[o]={sum:0,n:0});
+  all.forEach(r=>{
+    const rk=r.ranks||{};
+    Object.keys(rk).forEach(k=>{if(agg[k]){agg[k].sum+=rk[k];agg[k].n++;}});
+  });
+  const scored=opts.map(o=>({
+    name:o,
+    avg:agg[o].n?(agg[o].sum/agg[o].n):null,
+    n:agg[o].n
+  })).sort((a,b)=>(a.avg===null)-(b.avg===null)||a.avg-b.avg);
+  document.getElementById('statNeeds').innerHTML='<div style="font-size:12px;color:#999;margin-bottom:6px;">依平均順位排序（越上面＝夥伴越優先）</div>'+scored.map(s=>{
+    const label=s.avg!==null?('平均順位 '+s.avg.toFixed(1)+'（'+s.n+'人排入）'):'無人排入';
+    const pct=s.avg!==null?Math.round((8-s.avg)/7*100):0;
+    return `<div class="stat-row">${s.name}　<b>${label}</b><div class="stat-bar-wrap"><div class="stat-bar" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+  // 每筆
+  document.getElementById('respList').innerHTML = all.length? all.map(r=>{
+    const rk=r.ranks||{};
+    const rankStr=Object.keys(rk).sort((a,b)=>rk[a]-rk[b]).map(k=>rk[k]+'.'+k).join('　');
+    return `<div class="item"><b>${r.name}</b>（${r.time}）<br>
+     優先順序：${rankStr||'—'}<br>
+     7–12月FYC目標：${r.fyc||'—'}｜接受度：${r.acceptance||'—'}｜AI工具：${r.aitool||'—'}<br>
+     其他建議：${r.comment||'—'}<br>
+     希望業發組協助：${r.bizdev_help||'—'}</div>`;}).join('') : '<p style="color:#999">尚無資料</p>';
+}
+async function exportCSV(){
+  const all=await getAll();
+  if(!all.length){alert('目前沒有資料可匯出');return;}
+  const opts=['客戶開發與活動量','數位／AI工具協助','話術與異議處理','商品知識與提案製作','業績目標達成','定期業績進度檢視與盲點調整','個人人生目標'];
+  const head=['姓名',...opts.map(o=>'順位_'+o),'7-12月FYC目標','帶領方式接受度','想要的AI工具','其他建議','希望業發組協助','填寫時間'];
+  const rows=all.map(r=>[r.name,...opts.map(o=>(r.ranks&&r.ranks[o])||''),r.fyc,r.acceptance,r.aitool,r.comment,r.bizdev_help,r.time]);
+  const csv=[head,...rows].map(row=>row.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='業務需求調查_'+new Date().toLocaleDateString('zh-TW').replace(/\//g,'')+'.csv';
+  a.click();
+}
+async function clearAll(){
+  if(!confirm('確定要清空所有回覆資料嗎？此動作無法復原。'))return;
+  await clearStore();renderStats();
+}
+
+openDB();
+</script>
+</body>
+</html>
